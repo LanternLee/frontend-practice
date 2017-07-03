@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MyTasks</title>
+
+    <link href="https://cdn.bootcss.com/bootstrap/4.0.0-alpha.6/css/bootstrap-grid.css" rel="stylesheet">
+    <link rel="stylesheet" href="index.css">
+    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js"></script>
+    <script src="index.js"></script>
+</head>
+<body>
+<ul id="taskList">
+    <li class="taskList-title">
+        <div>
+            <input id="taskAdd-input" placeholder="请输入任务">
+            <button id="taskAdd-btn" onclick="addBtnClick()" >添加</button>
+        </div>
+    </li>
+</ul>
+
+<script>
+    function addBtnClick(obj){
+        var item=$('#taskAdd-input')
+        var date=getNowFormatDate()
+        var content=item.val()
+        if(content.length==0){
+            alert("请输入内容")
+            return
+        }
+
+        addList(content,date,false)
+        item.val('')
+    }
+
+
+    function taskFinish(obj) {
+        var finishBtn = $(obj);
+        var item=finishBtn.parents('li')[0]
+        var pos = $(item).index()
+        var dateSpan=$(item).find('.left')
+        if(finishBtn.hasClass('on')){
+            finishBtn.removeClass('on')
+        }
+        else{
+            finishBtn.addClass('on')
+        }
+
+        var date=getNowFormatDate()
+        updateList(pos,null,date,finishBtn.hasClass('on'))
+        dateSpan.text(date)
+    }
+
+
+    function taskContentChange(obj){
+        var input = $(obj)
+        var content = input.val()
+        var item=input.parents('li')[0]
+        var pos = $(item).index()
+        var dateSpan=$(item).find('.left')
+
+        var date=getNowFormatDate()
+        updateList(pos,content,date,null)
+        dateSpan.text(date)
+    }
+
+    function deleteTask(obj) {
+        var item=$(obj).parents('li')[0]
+        var pos = $(item).index()
+
+        deleteList(pos)
+    }
+
+    $(function () {
+        initList()
+    })
+
+    window.onbeforeunload=function () {
+        saveList()
+    }
+
+</script>
+</body>
+</html>
